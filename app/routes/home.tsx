@@ -1,13 +1,17 @@
 import type { Route } from "./+types/home";
-import { VidyaPlanner } from "../components/vidya-planner";
+import { PlanVidAI } from "../components/planvidai";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "VidyaPlanner" },
-    { name: "description", content: "Plan your learning journey with VidyaPlanner" },
+    { title: "PlanVidyAII - Plan Your Lessons with Ease" },
+    {
+      name: "description",
+      content:
+        "The effortless way for teachers to create clear and organized syllabus course plans with AI",
+    },
   ];
 }
 
 export default function Home() {
-  return <VidyaPlanner />;
+  return <PlanVidAI />;
 }
