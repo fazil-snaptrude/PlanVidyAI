@@ -64,7 +64,7 @@ export function ResultsView({ data, onBack }: ResultsViewProps) {
   const { courseInfo, schedule, termPlan } = data;
 
   return (
-    <div className="min-h-screen bg-amber-50 p-4">
+    <div className="min-h-screen p-4" style={{ backgroundColor: 'rgb(254, 255, 251)' }}>
       <div className="max-w-6xl mx-auto">
         <Button
           onClick={onBack}

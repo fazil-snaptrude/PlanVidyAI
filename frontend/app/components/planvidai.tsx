@@ -47,7 +47,7 @@ export function PlanVidAI() {
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center p-8 bg-amber-50">
+    <main className="min-h-screen flex items-center justify-center p-8" style={{ backgroundColor: 'rgb(254, 255, 251)' }}>
       <div className="w-full max-w-3xl">
         <div className="mb-12">
           <PlanVidhAILogo />
