@@ -10,7 +10,7 @@ export function PlanVidhAILogo({ className = "" }: { className?: string }) {
       </div>
       
       <div className="text-center">
-        <h1 className="text-2xl font-bold text-slate-800 tracking-wide">
+        <h1 className="text-2xl font-bold text-slate-800 tracking-wide font-serif">
           PlanVidyAI
         </h1>
       </div>
