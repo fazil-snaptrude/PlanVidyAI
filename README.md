@@ -1,1 +1,1 @@
-# PlanVidyaAI
+# PlanVidyAI
