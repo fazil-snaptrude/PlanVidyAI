@@ -59,6 +59,7 @@ export function PlanVidAI() {
   const [syllabus, setSyllabus] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [results, setResults] = useState<ResultsData | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,6 +67,7 @@ export function PlanVidAI() {
     if (!syllabus.trim()) return;
 
     setIsLoading(true);
+    setError(null);
 
     try {
       // Call the backend API directly
@@ -90,56 +92,7 @@ export function PlanVidAI() {
       setResults(transformedResponse);
     } catch (error) {
       console.error("Error calling backend API:", error);
-
-      // Return a fallback response if backend is unavailable
-      const fallbackResponse = {
-        courseInfo: {
-          title: "Generated Course Plan",
-          class: "XII",
-          subject: "Generated Subject",
-          academicYear: "2024-25",
-          totalWeeks: 36,
-          periodsPerWeek: 6,
-          practicalHours: 60,
-          theoryHours: 120,
-        },
-        schedule: [
-          {
-            week: 1,
-            unit: "Unit I: Introduction",
-            title: "Course Introduction",
-            topics: [
-              {
-                topic: "Course Overview",
-                subtopics: [
-                  "Introduction to the subject",
-                  "Course objectives",
-                  "Assessment methods",
-                ],
-                cbseReference: "Course Introduction",
-                periods: 3,
-                type: "theory",
-              },
-            ],
-            learningOutcomes: ["Students will understand the course structure"],
-            cbseAssessment: null,
-          },
-        ],
-        termPlan: {
-          term1: {
-            weeks: "1-18",
-            units: ["Unit I", "Unit II"],
-            assessment: "Term 1 Exam",
-          },
-          term2: {
-            weeks: "19-36",
-            units: ["Unit III", "Unit IV"],
-            assessment: "Term 2 Exam",
-          },
-        },
-      };
-
-      setResults(fallbackResponse);
+      setError("Failed to generate lesson plan. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -147,6 +100,7 @@ export function PlanVidAI() {
 
   const handleBack = () => {
     setResults(null);
+    setError(null);
   };
 
   if (results) {
@@ -197,6 +151,14 @@ export function PlanVidAI() {
               </Button>
             </div>
           </Card>
+          
+          {error && (
+            <Card className="mt-4 bg-red-50 border-red-200">
+              <div className="p-4">
+                <p className="text-red-700 text-sm">{error}</p>
+              </div>
+            </Card>
+          )}
         </form>
       </div>
     </main>
