@@ -124,7 +124,7 @@ export function PlanVidAI() {
                 value={syllabus}
                 onChange={(e) => setSyllabus(e.target.value)}
                 placeholder="Enter syllabus details"
-                className="p-6 min-h-[200px] text-base border-0 focus:ring-0 focus:outline-none resize-none bg-transparent rounded-2xl placeholder:text-slate-400"
+                className="p-6 min-h-[200px] text-base border-0 focus:ring-0 focus:outline-none resize-none bg-transparent rounded-2xl placeholder:text-slate-400 selection:bg-slate-200 selection:text-slate-900 dark:selection:bg-slate-600 dark:selection:text-white"
                 disabled={isLoading}
               />
               <Button
