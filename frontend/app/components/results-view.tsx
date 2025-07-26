@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { ArrowLeft, CheckCircle } from "lucide-react";
 
-interface Topic {
+export interface Topic {
   topic: string;
   subtopics?: string[];
   cbseReference: string;
@@ -12,7 +12,7 @@ interface Topic {
   equipment?: string[];
 }
 
-interface WeekSchedule {
+export interface WeekSchedule {
   week: number;
   unit: string;
   title: string;
@@ -22,10 +22,10 @@ interface WeekSchedule {
     type: string;
     marks: number;
     technique: string;
-  };
+  } | null;
 }
 
-interface CourseInfo {
+export interface CourseInfo {
   title: string;
   class: string;
   subject: string;
@@ -36,7 +36,7 @@ interface CourseInfo {
   theoryHours: number;
 }
 
-interface TermPlan {
+export interface TermPlan {
   term1: {
     weeks: string;
     units: string[];
@@ -49,7 +49,7 @@ interface TermPlan {
   };
 }
 
-interface ResultsData {
+export interface ResultsData {
   courseInfo: CourseInfo;
   schedule: WeekSchedule[];
   termPlan: TermPlan;
@@ -206,17 +206,19 @@ export function ResultsView({ data, onBack }: ResultsViewProps) {
                     </CardContent>
                   </Card>
 
-                  <Card className="bg-amber-50 border-amber-200">
-                    <CardContent className="p-4">
-                      <div className="flex justify-between items-center mb-2">
-                        <h4 className="font-semibold text-amber-800">{week.cbseAssessment.type}</h4>
-                        <Badge className="bg-amber-600 text-white">
-                          {week.cbseAssessment.marks} Marks
-                        </Badge>
-                      </div>
-                      <p className="text-sm text-amber-700">{week.cbseAssessment.technique}</p>
-                    </CardContent>
-                  </Card>
+                  {week.cbseAssessment && (
+                    <Card className="bg-amber-50 border-amber-200">
+                      <CardContent className="p-4">
+                        <div className="flex justify-between items-center mb-2">
+                          <h4 className="font-semibold text-amber-800">{week.cbseAssessment.type}</h4>
+                          <Badge className="bg-amber-600 text-white">
+                            {week.cbseAssessment.marks} Marks
+                          </Badge>
+                        </div>
+                        <p className="text-sm text-amber-700">{week.cbseAssessment.technique}</p>
+                      </CardContent>
+                    </Card>
+                  )}
                 </Card>
               ))}
             </div>

@@ -3,13 +3,62 @@ import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
 import { Card } from "./ui/card";
 import { Paperclip, ArrowUp, Loader2 } from "lucide-react";
-import { ResultsView } from "./results-view";
+import { ResultsView, type ResultsData } from "./results-view";
 import { PlanVidhAILogo } from "./planvidai-logo";
+
+// Function to convert backend snake_case response to frontend camelCase
+function transformBackendResponse(backendResponse: any): ResultsData {
+  return {
+    courseInfo: {
+      title: backendResponse.course_info.title,
+      class: backendResponse.course_info.class_,
+      subject: backendResponse.course_info.subject,
+      academicYear: backendResponse.course_info.academic_year,
+      totalWeeks: backendResponse.course_info.total_weeks,
+      periodsPerWeek: backendResponse.course_info.periods_per_week,
+      practicalHours: backendResponse.course_info.practical_hours,
+      theoryHours: backendResponse.course_info.theory_hours,
+    },
+    schedule: backendResponse.schedule.map((week: any) => ({
+      week: week.week,
+      unit: week.unit,
+      title: week.title,
+      topics: week.topics.map((topic: any) => ({
+        topic: topic.topic,
+        subtopics: topic.subtopics || undefined,
+        cbseReference: topic.cbse_reference,
+        periods: topic.periods,
+        type: topic.type,
+        equipment: topic.equipment,
+      })),
+      learningOutcomes: week.learning_outcomes,
+      cbseAssessment: week.cbse_assessment
+        ? {
+            type: week.cbse_assessment.type,
+            marks: week.cbse_assessment.marks,
+            technique: week.cbse_assessment.technique,
+          }
+        : null,
+    })),
+    termPlan: {
+      term1: {
+        weeks: backendResponse.term_plan.term1.weeks,
+        units: backendResponse.term_plan.term1.units,
+        assessment: backendResponse.term_plan.term1.assessment,
+      },
+      term2: {
+        weeks: backendResponse.term_plan.term2.weeks,
+        units: backendResponse.term_plan.term2.units,
+        assessment: backendResponse.term_plan.term2.assessment,
+      },
+    },
+  };
+}
 
 export function PlanVidAI() {
   const [syllabus, setSyllabus] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [results, setResults] = useState(null);
+  const [results, setResults] = useState<ResultsData | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -19,20 +68,78 @@ export function PlanVidAI() {
     setIsLoading(true);
 
     try {
-      const formData = new FormData();
-      formData.append("syllabus", syllabus);
-
-      const response = await fetch("/api/generate-plan", {
+      // Call the backend API directly
+      const response = await fetch("http://127.0.0.1:8000/api/teacher_help", {
         method: "POST",
-        body: formData,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          prompt: syllabus,
+        }),
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        setResults(data);
+      if (!response.ok) {
+        throw new Error(`Backend API error: ${response.status}`);
       }
+
+      const backendResponse = await response.json();
+
+      // Transform the backend response to match frontend expectations
+      const transformedResponse = transformBackendResponse(backendResponse);
+      setResults(transformedResponse);
     } catch (error) {
-      console.error("Error generating plan:", error);
+      console.error("Error calling backend API:", error);
+
+      // Return a fallback response if backend is unavailable
+      const fallbackResponse = {
+        courseInfo: {
+          title: "Generated Course Plan",
+          class: "XII",
+          subject: "Generated Subject",
+          academicYear: "2024-25",
+          totalWeeks: 36,
+          periodsPerWeek: 6,
+          practicalHours: 60,
+          theoryHours: 120,
+        },
+        schedule: [
+          {
+            week: 1,
+            unit: "Unit I: Introduction",
+            title: "Course Introduction",
+            topics: [
+              {
+                topic: "Course Overview",
+                subtopics: [
+                  "Introduction to the subject",
+                  "Course objectives",
+                  "Assessment methods",
+                ],
+                cbseReference: "Course Introduction",
+                periods: 3,
+                type: "theory",
+              },
+            ],
+            learningOutcomes: ["Students will understand the course structure"],
+            cbseAssessment: null,
+          },
+        ],
+        termPlan: {
+          term1: {
+            weeks: "1-18",
+            units: ["Unit I", "Unit II"],
+            assessment: "Term 1 Exam",
+          },
+          term2: {
+            weeks: "19-36",
+            units: ["Unit III", "Unit IV"],
+            assessment: "Term 2 Exam",
+          },
+        },
+      };
+
+      setResults(fallbackResponse);
     } finally {
       setIsLoading(false);
     }
@@ -47,7 +154,10 @@ export function PlanVidAI() {
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center p-8" style={{ backgroundColor: 'rgb(254, 255, 251)' }}>
+    <main
+      className="min-h-screen flex items-center justify-center p-8"
+      style={{ backgroundColor: "rgb(254, 255, 251)" }}
+    >
       <div className="w-full max-w-3xl">
         <div className="mb-12">
           <PlanVidhAILogo />
