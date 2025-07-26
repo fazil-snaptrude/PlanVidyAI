@@ -1,5 +1,5 @@
 .DS_Store
-.images
+.context
 /node_modules/
 
 # React Router
