@@ -1,13 +1,13 @@
 import type { Route } from "./+types/home";
-import { Welcome } from "../welcome/welcome";
+import { VidyaPlanner } from "../components/vidya-planner";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "New React Router App" },
-    { name: "description", content: "Welcome to React Router!" },
+    { title: "VidyaPlanner" },
+    { name: "description", content: "Plan your learning journey with VidyaPlanner" },
   ];
 }
 
 export default function Home() {
-  return <Welcome />;
+  return <VidyaPlanner />;
 }
