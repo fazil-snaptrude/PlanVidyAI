@@ -71,7 +71,7 @@ export function PlanVidAI() {
 
     try {
       // Call the backend API directly
-      const response = await fetch("http://127.0.0.1:8000/api/teacher_help", {
+      const response = await fetch("https://planvidyai.onrender.com/api/teacher_help", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
